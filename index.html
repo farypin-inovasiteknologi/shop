@@ -235,7 +235,7 @@ input, button, select, textarea {
                         <a href="javascript:void(0)" class="quick-link" onclick="window.scrollTo(0,0);"><i class="fa-solid fa-angle-right me-2 text-info"></i> Beranda</a>
                         <a href="javascript:void(0)" class="quick-link" onclick="document.getElementById('toko').scrollIntoView();"><i class="fa-solid fa-angle-right me-2 text-info"></i> Katalog Produk</a>
                         <a href="javascript:void(0)" class="quick-link" onclick="bukaProfil();"><i class="fa-solid fa-angle-right me-2 text-info"></i> Profil Developer</a>
-                        <a href="javascript:void(0)" class="quick-link" onclick="bukaPrivasi();"><i class="fa-solid fa-angle-right me-2 text-info"></i> Kebijakan Privasi</a>
+                        <a href="https://www.fary-edtech.my.id/kebijakan-privasi" target="_blank" rel="noopener noreferrer" class="quick-link"><i class="fa-solid fa-angle-right me-2 text-info"></i> Kebijakan Privasi</a>
                     </div>
                     <div class="col-lg-4 mb-4 mt-lg-0 mt-2">
                         <h5>Hubungi Kami</h5>
@@ -346,57 +346,7 @@ input, button, select, textarea {
 
     <div id="modalProfil" class="modal" tabindex="-1" style="background: rgba(0,0,0,0.6); display: none;"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable px-2"><div class="modal-content rounded-4 border-0 shadow-lg p-2"><div class="modal-header border-0 pb-0"><button type="button" class="btn-close" onclick="document.getElementById('modalProfil').style.display='none'"></button></div><div class="modal-body text-center"><img id="view-profFoto" src="" class="rounded-circle mb-2 border border-3 border-primary" width="90" height="90" style="object-fit:cover;"><h4 class="fw-bold text-dark fs-5" id="view-profNama">Nama</h4><p class="text-warning fw-bold mb-1" style="font-size:0.9rem;" id="view-profRole">Role</p><p class="text-start text-muted mt-2" id="view-profDesc" style="font-size:0.85rem; text-align: justify !important; line-height: 1.5;">Deskripsi</p><table class="table table-sm text-start mt-3 border-top pt-2" style="font-size:0.85rem;"><tr><th style="width: 35%" class="text-muted">Domisili</th><td id="view-profDomisili" class="fw-bold">-</td></tr><tr><th class="text-muted">Spesialisasi</th><td id="view-profSpesial" class="fw-bold">-</td></tr><tr><th class="text-muted">Status</th><td class="fw-bold text-success">Open for Projects</td></tr><tr><th class="text-muted">HP/WA</th><td id="view-profWaText" class="fw-bold">-</td></tr><tr><th class="text-muted">Email</th><td id="view-profEmailText" class="fw-bold">-</td></tr></table></div></div></div></div>
     
-   <div id="modalPrivasi" class="modal fade" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable px-2">
-            <div class="modal-content rounded-4 border-0 shadow-lg">
-                <div class="modal-header border-bottom bg-light">
-                    <h5 class="modal-title fw-bold fs-6"><i class="fa-solid fa-shield-halved text-primary me-2"></i> Kebijakan Privasi & Keamanan Data</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-4 text-secondary" style="font-size: 0.9rem; text-align: justify; line-height: 1.6;">
-                    
-                    <p class="mb-4">Kami di <strong>Fary EdTech</strong> ("Kami", "Platform") sangat menghargai dan berkomitmen penuh untuk melindungi privasi serta keamanan data pribadi Anda. Kebijakan ini menjelaskan dengan transparan bagaimana kami mengumpulkan, menggunakan, menyimpan, dan melindungi informasi Anda saat menggunakan aplikasi ini.</p>
-
-                    <h6 class="text-dark fw-bold mb-2">1. Pengumpulan Informasi Pribadi</h6>
-                    <p class="mb-4">Untuk memastikan kelancaran layanan dan proses pemesanan produk aplikasi/sistem kami, kami hanya mengumpulkan informasi yang sangat esensial secara langsung dari Anda melalui form pemesanan, yang meliputi:
-                        <ul class="mb-0">
-                            <li>Nama Lengkap (Sesuai identitas Anda)</li>
-                            <li>Nomor WhatsApp aktif (Untuk komunikasi pengiriman file & invoice)</li>
-                            <li>Instansi / Asal Sekolah (Opsional, untuk pendataan administrasi)</li>
-                            <li>Kota / Domisili Domisili</li>
-                        </ul>
-                    </p>
-
-                    <h6 class="text-dark fw-bold mb-2">2. Penggunaan Informasi</h6>
-                    <p class="mb-4">Data yang kami kumpulkan secara eksklusif digunakan untuk kepentingan transaksional dan peningkatan kualitas layanan, di antaranya:
-                        <ul class="mb-0">
-                            <li>Memproses, memvalidasi, dan mengirimkan detail pesanan aplikasi melalui WhatsApp.</li>
-                            <li>Merespons pertanyaan, permintaan demo teknis, atau bantuan teknis <em>(support)</em> dari Anda.</li>
-                            <li>Mengirimkan informasi pembaruan (*update*) atau perbaikan <em>(bug-fix)</em> terkait produk yang telah Anda beli.</li>
-                        </ul>
-                    </p>
-
-                    <h6 class="text-dark fw-bold mb-2">3. Perlindungan & Keamanan Data</h6>
-                    <p class="mb-4">Kami menerapkan standar keamanan siber (*cybersecurity*) yang ketat menggunakan infrastruktur penyimpanan tersertifikasi (Google Cloud Ecosystem). Kami menjamin dengan sepenuh hati bahwa:
-                        <ul class="mb-0">
-                            <li>Data Anda <strong>tidak akan pernah</strong> diperjualbelikan, disewakan, atau ditukar kepada pihak ketiga mana pun (termasuk biro iklan).</li>
-                            <li>Nomor WhatsApp yang Anda gunakan untuk ulasan publik (*review*) akan disensor secara otomatis demi melindungi privasi Anda dari penyalahgunaan (contoh: 0812****89).</li>
-                        </ul>
-                    </p>
-
-                    <h6 class="text-dark fw-bold mb-2">4. Retensi (Penyimpanan) Data</h6>
-                    <p class="mb-4">Kami akan menyimpan data transaksi Anda hanya selama diperlukan untuk tujuan garansi pemeliharaan sistem <em>(maintenance warranty)</em> dan rekam jejak pembelian lisensi. Anda berhak sewaktu-waktu meminta penghapusan riwayat data Anda dari sistem kami dengan menghubungi Admin melalui WhatsApp.</p>
-
-                    <h6 class="text-dark fw-bold mb-2">5. Persetujuan Pengguna</h6>
-                    <p class="mb-0">Dengan menekan tombol "Checkout & Kirim" atau menuliskan ulasan di platform kami, Anda secara sadar dan sukarela menyetujui seluruh ketentuan pengumpulan dan penggunaan informasi yang tertulis di dalam Kebijakan Privasi ini.</p>
-                    
-                </div>
-                <div class="modal-footer border-top-0 p-3 bg-light rounded-bottom-4">
-                    <button type="button" class="btn btn-primary fw-bold w-100 py-2 shadow-sm rounded-pill" data-bs-dismiss="modal">Saya Paham & Setuju</button>
-                </div>
-            </div>
-        </div>
-    </div>
+   
 
     <div class="modal fade" id="modalShare" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -733,7 +683,7 @@ input, button, select, textarea {
     }
 
     function bukaProfil() { document.getElementById('modalProfil').style.display = 'flex'; }
-    function bukaPrivasi() { new bootstrap.Modal(document.getElementById('modalPrivasi')).show(); }
+    
 
    // 8. TAMPILAN PRODUK 
     function fetchProductsFromSheet() {
@@ -1224,8 +1174,9 @@ function shareKe(platform) {
 }
 
 </script>
+
 <script>
-    // ini menghubungkan ke APK 
+  // ini menghubungkan ke APK 
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('./service-worker.js')
