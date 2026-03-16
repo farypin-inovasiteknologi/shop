@@ -710,33 +710,55 @@ input, button, select, textarea {
         }
     }
 
-    function navTo(viewId) {
-        if(viewId === 'cart') { renderCartUI(); cartOffcanvasInstance.show(); return; }
-        setActiveNavMobile(viewId);
+   function navTo(viewId) {
+    if(viewId === 'cart') { renderCartUI(); cartOffcanvasInstance.show(); return; }
+    setActiveNavMobile(viewId);
 
-        var views = document.querySelectorAll('.spa-view');
-        for(var i=0; i<views.length; i++) views[i].classList.remove('active');
-        
-        var targetView = document.getElementById('view-' + viewId);
-        if(targetView) targetView.classList.add('active');
-        
-        window.scrollTo({top: 0, behavior: 'smooth'});
+    var views = document.querySelectorAll('.spa-view');
+    for(var i=0; i<views.length; i++) views[i].classList.remove('active');
+    
+    var targetView = document.getElementById('view-' + viewId);
+    if(targetView) targetView.classList.add('active');
+    
+    window.scrollTo({top: 0, behavior: 'smooth'});
 
-        if(viewId === 'admin-dashboard') loadDashboardStats();
-        if(viewId === 'admin-products') loadAdminTable();
-        if(viewId === 'admin-orders') loadAdminOrders(); 
-        
-        if(viewId === 'admin-settings') {
-    document.getElementById('set-namaTokoNav').value = appSettings.namaTokoNav || ''; document.getElementById('set-heroJudul').value = appSettings.heroJudul || ''; document.getElementById('set-heroDeskripsi').value = appSettings.heroDeskripsi || ''; document.getElementById('set-promoText').value = appSettings.promoText || ''; document.getElementById('set-heroImage').value = appSettings.heroImage || ''; document.getElementById('set-logoToko').value = appSettings.logoToko || '';
-            if(appSettings.heroImage) { document.getElementById('preview-hero').src = appSettings.heroImage; document.getElementById('preview-hero').style.display = 'block'; }
-            if(appSettings.logoToko) { document.getElementById('preview-logo').src = appSettings.logoToko; document.getElementById('preview-logo').style.display = 'block'; }
-        }
-        if(viewId === 'admin-profile') {
-            document.getElementById('prof-nama').value = appSettings.profNama || ''; document.getElementById('prof-role').value = appSettings.profRole || ''; document.getElementById('prof-domisili').value = appSettings.domisili || ''; document.getElementById('prof-spesialisasi').value = appSettings.spesialisasi || ''; document.getElementById('prof-desc').value = appSettings.profDesc || ''; document.getElementById('prof-wa').value = appSettings.wa || ''; document.getElementById('prof-email').value = appSettings.email || ''; document.getElementById('prof-ig').value = appSettings.ig || ''; document.getElementById('prof-fb').value = appSettings.fb || ''; document.getElementById('prof-yt').value = appSettings.yt || ''; document.getElementById('prof-tt').value = appSettings.tt || ''; document.getElementById('prof-foto').value = appSettings.profFoto || '';
-            if(appSettings.profFoto) { document.getElementById('preview-prof').src = appSettings.profFoto; document.getElementById('preview-prof').style.display = 'block'; }
-        }
+    // Logika pemuatan data Admin
+    if(viewId === 'admin-dashboard') loadDashboardStats();
+    if(viewId === 'admin-products') loadAdminTable();
+    if(viewId === 'admin-orders') loadAdminOrders(); 
+    
+    // PERBAIKAN DI SINI: Pastikan semua kolom terisi dari appSettings
+    if(viewId === 'admin-settings') {
+        document.getElementById('set-namaTokoNav').value = appSettings.namaTokoNav || ''; 
+        document.getElementById('set-heroJudul').value = appSettings.heroJudul || ''; 
+        document.getElementById('set-heroDeskripsi').value = appSettings.heroDeskripsi || ''; 
+        document.getElementById('set-promoText').value = appSettings.promoText || ''; 
+        document.getElementById('set-heroImage').value = appSettings.heroImage || ''; 
+        document.getElementById('set-logoToko').value = appSettings.logoToko || '';
+        if(appSettings.heroImage) { document.getElementById('preview-hero').src = appSettings.heroImage; document.getElementById('preview-hero').style.display = 'block'; }
+        if(appSettings.logoToko) { document.getElementById('preview-logo').src = appSettings.logoToko; document.getElementById('preview-logo').style.display = 'block'; }
     }
 
+    if(viewId === 'admin-profile') {
+        // Mengisi kolom Profil & Kontak (Sosmed)
+        document.getElementById('prof-nama').value = appSettings.profNama || ''; 
+        document.getElementById('prof-role').value = appSettings.profRole || ''; 
+        document.getElementById('prof-domisili').value = appSettings.domisili || ''; 
+        document.getElementById('prof-spesialisasi').value = appSettings.spesialisasi || ''; 
+        document.getElementById('prof-desc').value = appSettings.profDesc || ''; 
+        document.getElementById('prof-wa').value = appSettings.wa || ''; 
+        document.getElementById('prof-email').value = appSettings.email || ''; 
+        document.getElementById('prof-ig').value = appSettings.ig || ''; 
+        document.getElementById('prof-fb').value = appSettings.fb || ''; 
+        document.getElementById('prof-yt').value = appSettings.yt || ''; 
+        document.getElementById('prof-tt').value = appSettings.tt || ''; 
+        document.getElementById('prof-foto').value = appSettings.profFoto || '';
+        if(appSettings.profFoto) { 
+            document.getElementById('preview-prof').src = appSettings.profFoto; 
+            document.getElementById('preview-prof').style.display = 'block'; 
+        }
+    }
+}
     function bukaProfil() { 
     // Ganti URL di bawah ini dengan link profil/website luar Anda
     window.open('https://www.farypin-inovasiteknologi.com', '_blank'); 
