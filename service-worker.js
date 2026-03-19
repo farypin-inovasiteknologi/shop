@@ -1,9 +1,9 @@
 const CACHE_NAME = 'farypin-store-auto'; 
 const urlsToCache = [
-  './',
-  './index.html',
-  './logo.png',
-  './manifest.json'
+  '/',
+  '/index.html',
+  '/logo.png',
+  '/manifest.json'
 ];
 
 // Tahap 1: Install & Simpan file ke memori HP pertama kali
