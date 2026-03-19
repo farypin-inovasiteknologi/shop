@@ -5,6 +5,7 @@
   "short_name": "Farypin Store",
   "description": "Menghadirkan aplikasi digital - Inovasi Teknologi untuk Pendidikan Masa Depan",
   "start_url": "/index.html",
+  "scope": "/", 
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#4f46e5",
