@@ -848,7 +848,7 @@ input, button, select, textarea {
             var p = produkArray[i];
             var isOpsiSiswa = (p.opsiSiswa === true || p.opsiSiswa === 'true');
             var hargaCoret = p.hCoret ? "<span class='text-decoration-line-through text-muted d-block' style='font-size:0.85rem;'>Rp " + Number(p.hCoret).toLocaleString('id-ID') + "</span>" : "";
-            var hargaTampil = isOpsiSiswa ? "<small class='text-muted'>Mulai</small> Rp 100.000" : ("Rp " + Number(p.hAsli).toLocaleString('id-ID'));
+            var hargaTampil = isOpsiSiswa ? "<small class='text-muted'>Mulai</small> Rp 300.000" : ("Rp " + Number(p.hAsli).toLocaleString('id-ID'));
             
             var foto = p.fotoUrl ? p.fotoUrl.replace('sz=w1000', 'sz=w400') : "https://via.placeholder.com/300";
             var textTombolBeli = isOpsiSiswa ? "Pilih Siswa" : "Masukkan Keranjang";
