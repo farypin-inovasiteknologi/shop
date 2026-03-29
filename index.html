@@ -1099,19 +1099,38 @@ document.getElementById('footer-wa').innerHTML = htmlWA !== "" ? htmlWA : "-";
     var htmlTemplate = "";
     for(var i=0; i<produkArray.length; i++) {
         var p = produkArray[i];
-        var isOpsiSiswa = (p.opsiSiswa === true || p.opsiSiswa === 'true');
         
-        // Atur format Harga & Diskon
+        // --- LOGIKA BACA JSON OPSI SISWA UNTUK HALAMAN DEPAN ---
+        let opsiParsed = [];
+        let hasOpsi = false;
+        let hargaMulai = p.hAsli;
+
+        try { 
+            let parsed = JSON.parse(p.opsiSiswa); 
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                opsiParsed = parsed;
+                hasOpsi = true;
+                // Cari harga termurah dari opsi yang dicentang
+                let hargaTermurah = Math.min(...opsiParsed.map(o => parseInt(o.harga)));
+                hargaMulai = hargaTermurah;
+            }
+        } catch(e) {
+            // Jaga-jaga kalau data lamanya belum sempat di-update di Admin
+            if (p.opsiSiswa === true || p.opsiSiswa === 'true') {
+                hasOpsi = true;
+                hargaMulai = 300000; 
+            }
+        }
+        
         var hargaCoret = p.hCoret ? `<span class='text-decoration-line-through text-muted d-block' style='font-size:0.75rem;'>Rp ${Number(p.hCoret).toLocaleString('id-ID')}</span>` : "";
         var ribbon = p.hCoret ? `<div class='promo-ribbon'>Diskon</div>` : "";
-        var hargaTampil = isOpsiSiswa ? `<small class='text-muted' style='font-size:0.7rem;'>Mulai</small> Rp 300.000` : `Rp ${Number(p.hAsli).toLocaleString('id-ID')}`;
+        var hargaTampil = hasOpsi ? `<small class='text-muted' style='font-size:0.7rem;'>Mulai</small> Rp ${Number(hargaMulai).toLocaleString('id-ID')}` : `Rp ${Number(p.hAsli).toLocaleString('id-ID')}`;
         
         var foto = p.fotoUrl ? p.fotoUrl.replace('sz=w1000', 'sz=w400') : "https://via.placeholder.com/300";
         
-        // PENTING: Gunakan event.stopPropagation() agar saat tombol keranjang diklik, kartu tidak ikut terbuka ke halaman detail
-        var onClickBeli = isOpsiSiswa ? `pilihSiswaPopup('${p.id}'); event.stopPropagation();` : `addToCart('${p.id}'); event.stopPropagation();`;
+        // PENTING: Tombol keranjang memanggil Popup jika ada opsi
+        var onClickBeli = hasOpsi ? `pilihSiswaPopup('${p.id}'); event.stopPropagation();` : `addToCart('${p.id}'); event.stopPropagation();`;
 
-        // LOGIKA BINTANG
         var ratingVal = p.rating !== undefined ? parseFloat(p.rating) : 4.0; 
         var countVal = p.ulasanCount || 0;
         var starHtml = "<div class='text-warning mb-2' style='font-size: 0.7rem;'>";
@@ -1123,7 +1142,6 @@ document.getElementById('footer-wa').innerHTML = htmlWA !== "" ? htmlWA : "-";
         var textCount = countVal > 0 ? `(${ratingVal.toFixed(1)})` : `(4.0)`;
         starHtml += ` <span class='text-muted ms-1' style='font-size: 0.65rem;'>${textCount}</span></div>`;
 
-        // KODE HTML KARTU (Perhatikan onclick di luar kartu, dan tombol melayang di bawah)
         htmlTemplate += `
         <div class='card-custom' onclick="bukaDetail('${p.id}')">
             <div class='card-img-wrapper'>
@@ -1158,10 +1176,9 @@ document.getElementById('footer-wa').innerHTML = htmlWA !== "" ? htmlWA : "-";
 
     // 9. DETAIL PRODUK & ULASAN
     function bukaDetail(id) {
-    currentViewedProductId = id; // Simpan ID produk ke memori
+    currentViewedProductId = id; 
 
     var p = null; for(var i=0; i<dbProducts.length; i++) { if(dbProducts[i].id === id) p = dbProducts[i]; }
-
     if(!p) return;
         
     document.getElementById('det-img').src = p.fotoUrl || "https://via.placeholder.com/400";
@@ -1170,7 +1187,6 @@ document.getElementById('footer-wa').innerHTML = htmlWA !== "" ? htmlWA : "-";
     document.getElementById('det-desc-singkat').innerText = p.detail;
     document.getElementById('det-desc-lengkap').innerHTML = p.spesifikasi || p.detail || "Belum ada spesifikasi lengkap."; 
 
-    // --- TAMBAHAN MENAMPILKAN SCREENSHOT ---
     let ssGrid = document.getElementById('det-ss-grid');
     let ssContainer = document.getElementById('det-ss-container');
     let validSS = p.screenshots ? p.screenshots.filter(url => url !== "") : [];
@@ -1178,49 +1194,49 @@ document.getElementById('footer-wa').innerHTML = htmlWA !== "" ? htmlWA : "-";
     if (validSS.length > 0) {
         let ssHtml = "";
         for(let i=0; i<validSS.length; i++) {
-            // Trik ubah link thumnail gdrive agar resolusi lebih bagus pas diklik
             let hiResUrl = validSS[i].replace('sz=w1000', 'sz=w800');
             ssHtml += `<img src="${validSS[i]}" class="ss-img" onclick="window.open('${hiResUrl}', '_blank')">`;
         }
         ssGrid.innerHTML = ssHtml;
-        ssContainer.classList.remove('d-none'); // Tampilkan div container
+        ssContainer.classList.remove('d-none'); 
     } else {
-        ssContainer.classList.add('d-none'); // Sembunyikan kalau tidak ada gambar
+        ssContainer.classList.add('d-none'); 
     }
-    // ---------------------------------------
         
-    // ... kode atas bukaDetail tidak berubah ...
-    
+    // --- CEK APAKAH PUNYA OPSI HARGA ---
     let opsiParsed = [];
-    try { opsiParsed = JSON.parse(p.opsiSiswa); } catch(e) {}
+    let hasOpsi = false;
+    let hargaMulai = p.hAsli;
+
+    try { 
+        let parsed = JSON.parse(p.opsiSiswa); 
+        if (Array.isArray(parsed) && parsed.length > 0) {
+            opsiParsed = parsed;
+            hasOpsi = true;
+            let hargaTermurah = Math.min(...opsiParsed.map(o => parseInt(o.harga)));
+            hargaMulai = hargaTermurah;
+        }
+    } catch(e) {
+        if (p.opsiSiswa === true || p.opsiSiswa === 'true') {
+            hasOpsi = true;
+            hargaMulai = 300000;
+        }
+    }
     
     var btnBeli = document.getElementById('det-btn-beli');
     var divOpsi = document.getElementById('det-opsi-siswa');
+    
+    // Matikan tampilan select dropdown bawaan
+    if(divOpsi) divOpsi.classList.add('d-none'); 
         
-    // Cek apakah produk punya data array OpsiSiswa yang lebih dari 0
-    if (Array.isArray(opsiParsed) && opsiParsed.length > 0) {
-        document.getElementById('det-harga-asli').innerText = "Mulai Rp " + Number(opsiParsed[0].harga).toLocaleString('id-ID');
-        divOpsi.classList.remove('d-none');
-        
-        // Buat <option> dinamis
-        let opsiHtml = "<option value=''>Pilih Jml Siswa...</option>";
-        opsiParsed.forEach(opt => {
-            opsiHtml += `<option value="${opt.nama}|${opt.harga}">${opt.nama} (Rp ${Number(opt.harga).toLocaleString('id-ID')})</option>`;
-        });
-        document.getElementById('det-select-siswa').innerHTML = opsiHtml;
-            
+    if (hasOpsi) {
+        document.getElementById('det-harga-asli').innerHTML = `<small class='text-muted fs-6'>Mulai</small> Rp ${Number(hargaMulai).toLocaleString('id-ID')}`;
+        // Alihkan tombol keranjang ke sistem POPUP
         btnBeli.onclick = function() {
-            var val = document.getElementById('det-select-siswa').value;
-            if(!val) { Swal.fire('Perhatian', 'Silakan pilih jumlah siswa terlebih dahulu!', 'warning'); return; }
-            var valSplit = val.split("|"); var namaVarian = valSplit[0]; var hargaVarian = parseInt(valSplit[1]);
-            var cartIdVariant = p.id + "-" + namaVarian; 
-            var exist = false; for(var j=0; j<cart.length; j++) { if(cart[j].cartId === cartIdVariant) { cart[j].qty += 1; exist = true; } }
-            if(!exist) { var itemData = Object.assign({}, p); itemData.nama = p.nama + " (" + namaVarian + ")"; itemData.hAsli = hargaVarian; itemData.qty = 1; itemData.cartId = cartIdVariant; cart.push(itemData); }
-            saveCart(); updateCartBadge(); Swal.fire('Sukses', 'Produk masuk keranjang', 'success');
+            pilihSiswaPopup(p.id);
         };
     } else {
         document.getElementById('det-harga-asli').innerText = "Rp " + Number(p.hAsli).toLocaleString('id-ID');
-        divOpsi.classList.add('d-none');
         btnBeli.onclick = function() { addToCart(p.id); };
     }
 
@@ -1303,10 +1319,29 @@ document.getElementById('footer-wa').innerHTML = htmlWA !== "" ? htmlWA : "-";
     if(!p) return;
 
     let opsiParsed = [];
-    try { opsiParsed = JSON.parse(p.opsiSiswa); } catch(e) {}
+    let hasOpsi = false;
 
-    let optionsHtml = `<select id="swal-select-siswa" class="form-select border-primary shadow-sm mt-3" style="font-size: 1rem;"><option value="">Pilih Jml Siswa...</option>`;
-    if (Array.isArray(opsiParsed) && opsiParsed.length > 0) {
+    try { 
+        let parsed = JSON.parse(p.opsiSiswa); 
+        if (Array.isArray(parsed) && parsed.length > 0) {
+            opsiParsed = parsed;
+            hasOpsi = true;
+        }
+    } catch(e) {
+        // Fallback kalau data lama belum di edit di admin
+        if (p.opsiSiswa === true || p.opsiSiswa === 'true') {
+            hasOpsi = true;
+            opsiParsed = [
+                {nama: "350 Siswa", harga: 300000},
+                {nama: "650 Siswa", harga: 550000},
+                {nama: "950 Siswa", harga: 800000},
+                {nama: "Unlimited Siswa", harga: 1000000}
+            ];
+        }
+    }
+
+    let optionsHtml = `<select id="swal-select-siswa" class="form-select border-primary shadow-sm mt-3" style="font-size: 1rem;"><option value="">Pilih Jml Siswa/Varian...</option>`;
+    if (hasOpsi) {
         opsiParsed.forEach(opt => {
             optionsHtml += `<option value="${opt.nama}|${opt.harga}">${opt.nama} (Rp ${Number(opt.harga).toLocaleString('id-ID')})</option>`;
         });
@@ -1322,7 +1357,7 @@ document.getElementById('footer-wa').innerHTML = htmlWA !== "" ? htmlWA : "-";
         confirmButtonColor: '#4f46e5',
         preConfirm: () => {
             var val = document.getElementById('swal-select-siswa').value;
-            if (!val) { Swal.showValidationMessage('Silakan pilih opsi terlebih dahulu!'); }
+            if (!val) { Swal.showValidationMessage('Silakan pilih varian terlebih dahulu!'); }
             return val;
         }
     }).then((result) => {
@@ -1330,17 +1365,28 @@ document.getElementById('footer-wa').innerHTML = htmlWA !== "" ? htmlWA : "-";
             var valSplit = result.value.split("|"); 
             var namaVarian = valSplit[0]; 
             var hargaVarian = parseInt(valSplit[1]);
+            // Buat ID unik biar beda varian gak gabung qty-nya
             var cartIdVariant = p.id + "-" + namaVarian; 
 
             var exist = false; 
-            for(var j=0; j<cart.length; j++) { if(cart[j].cartId === cartIdVariant) { cart[j].qty += 1; exist = true; } }
+            for(var j=0; j<cart.length; j++) { 
+                if(cart[j].cartId === cartIdVariant) { 
+                    cart[j].qty += 1; 
+                    exist = true; 
+                } 
+            }
+            
             if(!exist) { 
                 var itemData = Object.assign({}, p); 
                 itemData.nama = p.nama + " (" + namaVarian + ")"; 
-                itemData.hAsli = hargaVarian; itemData.qty = 1; itemData.cartId = cartIdVariant; 
+                itemData.hAsli = hargaVarian; 
+                itemData.qty = 1; 
+                itemData.cartId = cartIdVariant; 
                 cart.push(itemData); 
             }
-            saveCart(); updateCartBadge(); 
+            
+            saveCart(); 
+            updateCartBadge(); 
             Swal.fire({ title: 'Sukses', text: 'Produk masuk keranjang', icon: 'success', timer: 1500, showConfirmButton: false });
         }
     });
