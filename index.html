@@ -18,6 +18,7 @@
     <meta property="og:image" content="https://via.placeholder.com/600x315.png?text=Farypin+IT"> 
     <meta property="og:url" content="https://www.farypinstore.my.id/">
 
+
     <link rel="icon" type="image/png" href="./logo.png">
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#4f46e5">
@@ -357,6 +358,7 @@ input, button, select, textarea {
             <a href="javascript:void(0)" class="admin-only d-none" onclick="navTo('admin-dashboard')" style="color:#06b6d4;">Dashboard</a>
             <a href="javascript:void(0)" class="admin-only d-none" onclick="navTo('admin-orders')" style="color:#06b6d4;">Pesanan Baru</a>
             <a href="javascript:void(0)" class="admin-only d-none" onclick="navTo('admin-products')" style="color:#06b6d4;">Katalog</a>
+            <a href="javascript:void(0)" class="admin-only d-none" onclick="navTo('admin-opsi')" style="color:#06b6d4;">Opsi Harga</a>
             <a href="javascript:void(0)" class="admin-only d-none" onclick="navTo('admin-settings')" style="color:#06b6d4;">Pengaturan</a>
             <a href="javascript:void(0)" class="admin-only d-none" onclick="navTo('admin-profile')" style="color:#06b6d4;">Profil & Kontak</a>
             <a href="javascript:void(0)" class="admin-only d-none" onclick="logout()" style="color:red;">Keluar</a>
@@ -545,6 +547,43 @@ input, button, select, textarea {
     <div id="view-admin-dashboard" class="spa-view container-utama"><div class="admin-panel"><h3 class="mb-4"><i class="fa-solid fa-gauge"></i> Dashboard Admin</h3><div class="row text-center"><div class="col-md-4 mb-3"><div class="card shadow-sm bg-info text-white p-4"><h2 id="stat-prod">0</h2><p>Total Produk</p></div></div><div class="col-md-4 mb-3"><div class="card shadow-sm bg-success text-white p-4"><h2 id="stat-user">0</h2><p>Total Admin</p></div></div><div class="col-md-4 mb-3"><div class="card shadow-sm bg-warning text-dark p-4"><h2 id="stat-order">0</h2><p>Pesanan Masuk</p></div></div></div></div></div>
     <div id="view-admin-orders" class="spa-view container-utama"><div class="admin-panel"><h3 class="mb-4"><i class="fa-solid fa-clipboard-list text-primary"></i> Data Pemesanan</h3><div class="table-responsive"><table class="table table-bordered table-striped bg-white align-middle" style="font-size: 0.9rem; min-width:800px;"><thead class="table-dark"><tr><th>Tgl</th><th>Nomor WA</th><th>Pemesan</th><th>Kota</th><th>Produk</th><th>Qty</th><th>Total Rp</th><th>Status</th></tr></thead><tbody id="table-orders-body"></tbody></table></div></div></div>
     <div id="view-admin-products" class="spa-view container-utama"><div class="admin-panel"><div class="d-flex justify-content-between mb-3 flex-wrap gap-2"><h3><i class="fa-solid fa-box"></i> Manajemen Produk</h3><button class="btn btn-success" onclick="openModalProduct()"><i class="fa-solid fa-plus"></i> Tambah Produk</button></div><div class="table-responsive"><table class="table table-bordered table-hover bg-white align-middle" style="min-width:600px;"><thead class="table-dark"><tr><th>Foto</th><th>Nama</th><th>Harga Asli</th><th>Sistem Siswa</th><th style="width:100px;">Aksi</th></tr></thead><tbody id="table-produk-body"></tbody></table></div></div></div>
+
+    <div id="view-admin-opsi" class="spa-view container-utama">
+    <div class="admin-panel">
+        <div class="d-flex justify-content-between mb-3 flex-wrap gap-2">
+            <h3><i class="fa-solid fa-tags"></i> Master Opsi Harga</h3>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card p-3 shadow-sm border-0 bg-light">
+                    <h5 class="fw-bold mb-3" id="form-opsi-title">Tambah Opsi Baru</h5>
+                    <form id="formOpsiHarga" onsubmit="submitOpsiHarga(event)">
+                        <input type="hidden" id="opt-id">
+                        <div class="mb-2">
+                            <label class="small fw-bold text-muted">Nama Varian (Cth: 100 Siswa)</label>
+                            <input type="text" id="opt-nama" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small fw-bold text-muted">Harga (Rp)</label>
+                            <input type="number" id="opt-harga" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" id="btnSaveOpsi"><i class="fa-solid fa-save"></i> Simpan Opsi</button>
+                        <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btnBatalOpsi" onclick="resetFormOpsi()">Batal Edit</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover bg-white align-middle">
+                        <thead class="table-dark"><tr><th>Nama Varian</th><th>Harga (Rp)</th><th style="width:100px;">Aksi</th></tr></thead>
+                        <tbody id="table-opsi-body"><tr><td colspan='3' class='text-center'>Memuat...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
     <div id="view-admin-settings" class="spa-view container-utama"><div class="admin-panel"><h3 class="mb-4"><i class="fa-solid fa-gear"></i> Pengaturan Beranda</h3><form id="formSettings" onsubmit="saveSettings(event)"><div class="row"><div class="col-md-6 mb-4"><label class="form-label">Upload Logo Toko</label><input type="file" id="logo-file" class="form-control" accept="image/*" onchange="triggerCrop(event, 'logo')"><input type="hidden" id="set-logoToko"><img id="preview-logo" src="" class="mt-2 rounded-circle" style="width:80px; height:80px; display:none; object-fit:cover; border:2px solid #ddd;"></div><div class="col-md-6 mb-4"><label class="form-label">Upload Gambar Hero</label><input type="file" id="hero-file" class="form-control" accept="image/*" onchange="triggerCrop(event, 'hero')"><input type="hidden" id="set-heroImage"><img id="preview-hero" src="" class="mt-2 rounded" style="max-height:80px; display:none; object-fit:cover;"></div></div>
     <div class="mb-3"><label class="form-label">Nama Toko (Header/Navbar)</label><input type="text" id="set-namaTokoNav" class="form-control" required></div>
 <div class="mb-3"><label class="form-label">Judul Besar Beranda</label><input type="text" id="set-heroJudul" class="form-control" required></div>
@@ -649,7 +688,13 @@ input, button, select, textarea {
                             <label class="text-muted small fw-bold">Spesifikasi Lengkap</label>
                             <div id="editor-container" style="height: 200px; background: #fff; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;"></div>
                             <input type="hidden" id="prod-spesifikasi"></div>
-                            <div class="col-md-12 mb-3 bg-light p-2 rounded border"><div class="form-check form-switch mb-1"><input class="form-check-input" type="checkbox" id="prod-opsiSiswa"><label class="form-check-label fw-bold text-primary small" for="prod-opsiSiswa">Aktifkan Opsi Jumlah Siswa</label></div></div>
+                            <div class="col-md-12 mb-3 bg-light p-3 rounded border">
+    <label class="fw-bold text-primary small mb-2"><i class="fa-solid fa-tags"></i> Aktifkan Mode Harga Varian / Siswa</label>
+    <p class="text-muted" style="font-size: 0.75rem; margin-top:-5px;">Centang rentang siswa yang berlaku untuk aplikasi ini. Jika tidak ada yang dicentang, produk akan menggunakan Harga Asli.</p>
+    <div id="container-opsi-harga" class="d-flex flex-wrap gap-2">
+        <small class="text-muted"><i class='fa-solid fa-spinner fa-spin'></i> Memuat master opsi...</small>
+    </div>
+</div>
                             <div class="col-6 mb-2"><label class="text-muted small fw-bold">Harga Coret</label><input type="number" id="prod-hCoret" class="form-control form-control-sm"></div>
                             <div class="col-6 mb-2"><label class="text-muted small fw-bold">Harga Asli</label><input type="number" id="prod-hAsli" class="form-control form-control-sm" required></div>
                             <div class="col-md-4 mb-2 d-none"><label class="text-muted small fw-bold">Harga Midtrans</label><input type="number" id="prod-hMidtrans" class="form-control form-control-sm"></div>
@@ -704,7 +749,7 @@ input, button, select, textarea {
     // 1. KONFIGURASI API (WAJIB DIISI)
     // ==========================================
     // Nanti ganti teks di bawah ini dengan URL Web App dari Google Apps Script Anda
-    const GAS_API_URL = "https://script.google.com/a/macros/admin.sma.belajar.id/s/AKfycbxN65T-mQTDY_YfxIgn4a7DXmkV0ST5KWdqKQ4Vw93SIYv5sCZPMxZEvOdIfdN1Hz8T/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz3zREDpzcy4nadi2fcPzM6DbLtd0sVhDRMacsXgzdR4_O-SXYp2VJYQKw2YnOlbi7L/exec";
 
     // Fungsi Pembantu untuk Request GET
     async function gasAPI_GET(action, extraParams = "") {
@@ -832,6 +877,7 @@ input, button, select, textarea {
         if (savedUser) { try { currentUser = JSON.parse(savedUser); } catch(e){} }
     }
 
+    var dbOpsiHarga = [];
    function initApp() {
         cartOffcanvasInstance = new bootstrap.Offcanvas(document.getElementById('cartOffcanvas'), { backdrop: false });
         checkoutModalInstance = new bootstrap.Modal(document.getElementById('modalCheckoutForm'));
@@ -954,6 +1000,7 @@ document.getElementById('footer-wa').innerHTML = htmlWA !== "" ? htmlWA : "-";
     if(viewId === 'admin-dashboard') loadDashboardStats();
     if(viewId === 'admin-products') loadAdminTable();
     if(viewId === 'admin-orders') loadAdminOrders(); 
+    if(viewId === 'admin-opsi') loadMasterOpsi(); // <-- TAMBAHKAN INI
     
     // PERBAIKAN DI SINI: Pastikan semua kolom terisi dari appSettings
     if(viewId === 'admin-settings') {
@@ -1142,19 +1189,25 @@ document.getElementById('footer-wa').innerHTML = htmlWA !== "" ? htmlWA : "-";
     }
     // ---------------------------------------
         
-    var isOpsiSiswa = (p.opsiSiswa === true || p.opsiSiswa === 'true');
+    // ... kode atas bukaDetail tidak berubah ...
+    
+    let opsiParsed = [];
+    try { opsiParsed = JSON.parse(p.opsiSiswa); } catch(e) {}
+    
     var btnBeli = document.getElementById('det-btn-beli');
     var divOpsi = document.getElementById('det-opsi-siswa');
         
-    if (isOpsiSiswa) {
-        document.getElementById('det-harga-asli').innerText = "Mulai Rp 300.000";
+    // Cek apakah produk punya data array OpsiSiswa yang lebih dari 0
+    if (Array.isArray(opsiParsed) && opsiParsed.length > 0) {
+        document.getElementById('det-harga-asli').innerText = "Mulai Rp " + Number(opsiParsed[0].harga).toLocaleString('id-ID');
         divOpsi.classList.remove('d-none');
-        document.getElementById('det-select-siswa').innerHTML = 
-"<option value=''>Pilih Jml Siswa...</option>" +
-"<option value='350 Siswa|300000'>1-350 Siswa (300Rb)</option>" +
-"<option value='650 Siswa|550000'>351-650 Siswa (550Rb)</option>" +
-"<option value='950 Siswa|800000'>651-950 Siswa (800Rb)</option>" +
-"<option value='Unlimited Siswa|1000000'>951 Siswa ke atas (1Jt)</option>";
+        
+        // Buat <option> dinamis
+        let opsiHtml = "<option value=''>Pilih Jml Siswa...</option>";
+        opsiParsed.forEach(opt => {
+            opsiHtml += `<option value="${opt.nama}|${opt.harga}">${opt.nama} (Rp ${Number(opt.harga).toLocaleString('id-ID')})</option>`;
+        });
+        document.getElementById('det-select-siswa').innerHTML = opsiHtml;
             
         btnBeli.onclick = function() {
             var val = document.getElementById('det-select-siswa').value;
@@ -1245,25 +1298,23 @@ document.getElementById('footer-wa').innerHTML = htmlWA !== "" ? htmlWA : "-";
     }
 
     function pilihSiswaPopup(productId) {
-    // Cari data produk yang diklik
     var p = null; 
     for(var i=0; i<dbProducts.length; i++) { if(dbProducts[i].id === productId) p = dbProducts[i]; }
     if(!p) return;
 
-    // Siapkan pilihan dropdown untuk di dalam popup
-    var optionsHtml = `
-        <select id="swal-select-siswa" class="form-select border-primary shadow-sm mt-3" style="font-size: 1rem;">
-            <option value="">Pilih Jml Siswa...</option>
-            <option value="350 Siswa|300000">1-350 Siswa (300Rb)</option>
-            <option value="650 Siswa|550000">351-650 Siswa (550Rb)</option>
-            <option value="950 Siswa|800000">651-950 Siswa (800Rb)</option>
-            <option value="Unlimited Siswa|1000000">951 Siswa ke atas (1Jt)</option>
-        </select>
-    `;
+    let opsiParsed = [];
+    try { opsiParsed = JSON.parse(p.opsiSiswa); } catch(e) {}
 
-    // Munculkan popup SweetAlert
+    let optionsHtml = `<select id="swal-select-siswa" class="form-select border-primary shadow-sm mt-3" style="font-size: 1rem;"><option value="">Pilih Jml Siswa...</option>`;
+    if (Array.isArray(opsiParsed) && opsiParsed.length > 0) {
+        opsiParsed.forEach(opt => {
+            optionsHtml += `<option value="${opt.nama}|${opt.harga}">${opt.nama} (Rp ${Number(opt.harga).toLocaleString('id-ID')})</option>`;
+        });
+    }
+    optionsHtml += `</select>`;
+
     Swal.fire({
-        title: 'Pilih Jumlah Siswa',
+        title: 'Pilih Varian',
         html: '<div class="text-start">Tentukan paket untuk <b>' + p.nama + '</b>:' + optionsHtml + '</div>',
         showCancelButton: true,
         confirmButtonText: '<i class="fa-solid fa-cart-plus"></i> Tambahkan',
@@ -1271,33 +1322,25 @@ document.getElementById('footer-wa').innerHTML = htmlWA !== "" ? htmlWA : "-";
         confirmButtonColor: '#4f46e5',
         preConfirm: () => {
             var val = document.getElementById('swal-select-siswa').value;
-            if (!val) { Swal.showValidationMessage('Silakan pilih jumlah siswa terlebih dahulu!'); }
+            if (!val) { Swal.showValidationMessage('Silakan pilih opsi terlebih dahulu!'); }
             return val;
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            // Jika user sudah memilih dan klik Tambahkan
             var valSplit = result.value.split("|"); 
             var namaVarian = valSplit[0]; 
             var hargaVarian = parseInt(valSplit[1]);
             var cartIdVariant = p.id + "-" + namaVarian; 
 
-            // Masukkan ke keranjang
             var exist = false; 
-            for(var j=0; j<cart.length; j++) { 
-                if(cart[j].cartId === cartIdVariant) { cart[j].qty += 1; exist = true; } 
-            }
+            for(var j=0; j<cart.length; j++) { if(cart[j].cartId === cartIdVariant) { cart[j].qty += 1; exist = true; } }
             if(!exist) { 
                 var itemData = Object.assign({}, p); 
                 itemData.nama = p.nama + " (" + namaVarian + ")"; 
-                itemData.hAsli = hargaVarian; 
-                itemData.qty = 1; 
-                itemData.cartId = cartIdVariant; 
+                itemData.hAsli = hargaVarian; itemData.qty = 1; itemData.cartId = cartIdVariant; 
                 cart.push(itemData); 
             }
-
-            saveCart(); 
-            updateCartBadge(); 
+            saveCart(); updateCartBadge(); 
             Swal.fire({ title: 'Sukses', text: 'Produk masuk keranjang', icon: 'success', timer: 1500, showConfirmButton: false });
         }
     });
@@ -1489,6 +1532,39 @@ document.getElementById('footer-wa').innerHTML = htmlWA !== "" ? htmlWA : "-";
         });
     }
 
+    function renderCheckboxOpsi(selectedJsonStr = "") {
+    let container = document.getElementById('container-opsi-harga');
+    if(dbOpsiHarga.length === 0) { container.innerHTML = "<small class='text-danger'>Master opsi kosong. Tambahkan dulu di menu Admin > Opsi Harga.</small>"; return; }
+    
+    let selectedArr = [];
+    try { selectedArr = JSON.parse(selectedJsonStr); } catch(e){}
+    let selectedIds = selectedArr.map(s => s.id); // ambil ID yang dicentang sebelumnya
+
+    let html = "";
+    dbOpsiHarga.forEach(opt => {
+        let isChecked = selectedIds.includes(opt.id) ? "checked" : "";
+        html += `
+        <div class="form-check form-check-inline border bg-white p-2 rounded" style="margin:0;">
+            <input class="form-check-input check-opsi-produk" type="checkbox" value='${JSON.stringify(opt)}' id="chk-${opt.id}" style="margin-left: 5px;" ${isChecked}>
+            <label class="form-check-label ms-1" for="chk-${opt.id}">${opt.nama} (Rp ${Number(opt.harga).toLocaleString('id-ID')})</label>
+        </div>`;
+    });
+    container.innerHTML = html;
+}
+
+function openModalProduct() { 
+    document.getElementById('formProduct').reset(); 
+    document.getElementById('prod-id').value = ''; 
+    quill.root.innerHTML = ''; 
+    base64Images.prod = null; 
+    document.getElementById('preview-prod').style.display = 'none'; 
+    document.getElementById('preview-ss-container').innerHTML = '';
+    currentScreenshots = [];
+    
+    renderCheckboxOpsi(""); // Tampilkan checkbox kosong
+    modalProd.show(); 
+}
+
 function editProduct(id) {
     var p = null; for(var i=0; i<dbProducts.length; i++) { if(dbProducts[i].id === id) p = dbProducts[i]; }
     if(!p) return;
@@ -1503,23 +1579,50 @@ function editProduct(id) {
     document.getElementById('prod-linkDemo').value = p.linkDemo || ''; 
     document.getElementById('prod-linkVid').value = p.linkVid || ''; 
     document.getElementById('prod-fotoUrl').value = p.fotoUrl || ''; 
-    document.getElementById('prod-opsiSiswa').checked = (p.opsiSiswa === true || p.opsiSiswa === 'true');
+    
+    // Render checkbox dan centang yang sudah tersimpan
+    renderCheckboxOpsi(p.opsiSiswa); 
     
     base64Images.prod = null; 
-    if(p.fotoUrl) { 
-        document.getElementById('preview-prod').src = p.fotoUrl; 
-        document.getElementById('preview-prod').style.display = 'block'; 
-    } else { 
-        document.getElementById('preview-prod').style.display = 'none'; 
-    } 
+    if(p.fotoUrl) { document.getElementById('preview-prod').src = p.fotoUrl; document.getElementById('preview-prod').style.display = 'block'; } 
+    else { document.getElementById('preview-prod').style.display = 'none'; } 
 
-    // --- TAMBAHAN UNTUK SCREENSHOT ---
-    // Mengambil URL screenshot yang tidak kosong dari database
     currentScreenshots = p.screenshots ? p.screenshots.filter(url => url !== "") : [];
-    renderPreviewSS(); // Tampilkan kotak kecil previewnya
-    // ---------------------------------
-
+    renderPreviewSS(); 
     modalProd.show();
+}
+
+function submitProduct() { 
+    var loadData = mulaiLoadingBtn('btnSaveProd', "<i class='fa-solid fa-save'></i> Simpan");
+    
+    // Kumpulkan opsi yang dicentang
+    let checkedOpsi = [];
+    document.querySelectorAll('.check-opsi-produk:checked').forEach(el => {
+        checkedOpsi.push(JSON.parse(el.value));
+    });
+    
+    var productData = { 
+        id: document.getElementById('prod-id').value, 
+        nama: document.getElementById('prod-nama').value, 
+        detail: document.getElementById('prod-detail').value, 
+        spesifikasi: quill.root.innerHTML, 
+        hCoret: document.getElementById('prod-hCoret').value, 
+        hAsli: document.getElementById('prod-hAsli').value, 
+        hMidtrans: document.getElementById('prod-hMidtrans').value, 
+        linkDemo: document.getElementById('prod-linkDemo').value, 
+        linkVid: document.getElementById('prod-linkVid').value, 
+        fotoUrl: document.getElementById('prod-fotoUrl').value, 
+        opsiSiswa: JSON.stringify(checkedOpsi), // <-- SIMPAN SEBAGAI JSON
+        newScreenshots: currentScreenshots 
+    }; 
+    
+    gasAPI_POST({ action: 'saveProduct', auth: currentUser, productData: productData, base64Image: base64Images.prod }).then(res => {
+        stopLoadingBtn(loadData);
+        if(res.status === 'success') { 
+            base64Images.prod = null; modalProd.hide(); Swal.fire('Berhasil', 'Produk disimpan', 'success'); 
+            fetchProductsFromSheet(); loadAdminTable(); 
+        } else { Swal.fire('Gagal', res.message, 'error'); } 
+    });
 }
 
     function hapusProduct(id) { 
@@ -1600,57 +1703,13 @@ function editProduct(id) {
         });
     });
 
-    function openModalProduct() { 
-    document.getElementById('formProduct').reset(); 
-    document.getElementById('prod-id').value = ''; 
-    quill.root.innerHTML = ''; 
-    base64Images.prod = null; 
-    document.getElementById('preview-prod').style.display = 'none'; 
-    
-    // --- TAMBAHAN UNTUK SCREENSHOT ---
-    document.getElementById('preview-ss-container').innerHTML = '';
-    currentScreenshots = [];
-    // ---------------------------------
-    
-    modalProd.show(); 
-}
 
 
     function triggerCrop(e, target) { currentCropTarget = target; var file = e.target.files[0]; if (file) { var reader = new FileReader(); reader.onload = function(event) { document.getElementById('crop-image-container').src = event.target.result; modalCrop.show(); document.getElementById('modalCrop').addEventListener('shown.bs.modal', function () { if(cropper) cropper.destroy(); var aspect = (target === 'hero') ? 20/8 : 1/1; cropper = new Cropper(document.getElementById('crop-image-container'), { aspectRatio: aspect, viewMode: 1 }); }, {once: true}); }; reader.readAsDataURL(file); } }
     function applyCrop() { if(cropper) { var w = (currentCropTarget === 'hero') ? 1000 : 400; var h = (currentCropTarget === 'hero') ? 450 : 500; var canvas = cropper.getCroppedCanvas({ width: w, height: h }); var base64 = canvas.toDataURL('image/png'); base64Images[currentCropTarget] = base64; var preview = document.getElementById('preview-' + currentCropTarget); if(preview) { preview.src = base64; preview.style.display = 'block'; } modalCrop.hide(); } }
     function cancelCrop() { document.getElementById(currentCropTarget + '-file').value = ""; base64Images[currentCropTarget] = null; modalCrop.hide(); }
     
-    function submitProduct() { 
-    var loadData = mulaiLoadingBtn('btnSaveProd', "<i class='fa-solid fa-save'></i> Simpan");
-    
-    // Kita tambahkan newScreenshots di dalam data ini
-    var productData = { 
-        id: document.getElementById('prod-id').value, 
-        nama: document.getElementById('prod-nama').value, 
-        detail: document.getElementById('prod-detail').value, 
-        spesifikasi: quill.root.innerHTML, 
-        hCoret: document.getElementById('prod-hCoret').value, 
-        hAsli: document.getElementById('prod-hAsli').value, 
-        hMidtrans: document.getElementById('prod-hMidtrans').value, 
-        linkDemo: document.getElementById('prod-linkDemo').value, 
-        linkVid: document.getElementById('prod-linkVid').value, 
-        fotoUrl: document.getElementById('prod-fotoUrl').value, 
-        opsiSiswa: document.getElementById('prod-opsiSiswa').checked,
-        newScreenshots: currentScreenshots // <-- TAMBAHANNYA DI SINI
-    }; 
-    
-    gasAPI_POST({ action: 'saveProduct', auth: currentUser, productData: productData, base64Image: base64Images.prod }).then(res => {
-        stopLoadingBtn(loadData);
-        if(res.status === 'success') { 
-            base64Images.prod = null; 
-            modalProd.hide(); 
-            Swal.fire('Berhasil', 'Produk disimpan', 'success'); 
-            fetchProductsFromSheet(); 
-            loadAdminTable(); 
-        } 
-        else { Swal.fire('Gagal', res.message, 'error'); } 
-    });
-}
+
 
     function bukaModalShare() {
     modalShareInstance.show();
@@ -1821,6 +1880,56 @@ function hapusPreviewSS(index) {
     renderPreviewSS();
 }
 
+function loadMasterOpsi() {
+    gasAPI_GET('getOpsiHarga').then(opsi => {
+        dbOpsiHarga = opsi || [];
+        renderTableOpsi();
+    });
+}
+
+function renderTableOpsi() {
+    let tbody = document.getElementById('table-opsi-body');
+    if(dbOpsiHarga.length === 0) { tbody.innerHTML = "<tr><td colspan='3' class='text-center'>Belum ada opsi harga.</td></tr>"; return; }
+    let html = "";
+    dbOpsiHarga.forEach(opt => {
+        html += `<tr><td>${opt.nama}</td><td>Rp ${Number(opt.harga).toLocaleString('id-ID')}</td>
+        <td><button class='btn btn-sm btn-info text-white me-1' onclick="editOpsi('${opt.id}', '${opt.nama}', '${opt.harga}')"><i class='fa-solid fa-pen'></i></button><button class='btn btn-sm btn-danger' onclick="hapusOpsi('${opt.id}')"><i class='fa-solid fa-trash'></i></button></td></tr>`;
+    });
+    tbody.innerHTML = html;
+}
+
+function submitOpsiHarga(e) {
+    e.preventDefault();
+    let loadData = mulaiLoadingBtn('btnSaveOpsi', "<i class='fa-solid fa-save'></i> Simpan");
+    let data = { id: document.getElementById('opt-id').value, nama: document.getElementById('opt-nama').value, harga: document.getElementById('opt-harga').value };
+    gasAPI_POST({ action: 'saveOpsiHarga', auth: currentUser, opsiData: data }).then(res => {
+        stopLoadingBtn(loadData);
+        if(res.status === 'success') { Swal.fire('Sukses', 'Disimpan', 'success'); resetFormOpsi(); loadMasterOpsi(); }
+    });
+}
+
+function editOpsi(id, nama, harga) {
+    document.getElementById('opt-id').value = id;
+    document.getElementById('opt-nama').value = nama;
+    document.getElementById('opt-harga').value = harga;
+    document.getElementById('form-opsi-title').innerText = "Edit Opsi";
+    document.getElementById('btnBatalOpsi').classList.remove('d-none');
+}
+
+function resetFormOpsi() {
+    document.getElementById('formOpsiHarga').reset();
+    document.getElementById('opt-id').value = "";
+    document.getElementById('form-opsi-title').innerText = "Tambah Opsi Baru";
+    document.getElementById('btnBatalOpsi').classList.add('d-none');
+}
+
+function hapusOpsi(id) {
+    Swal.fire({ title: 'Hapus Opsi?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya' }).then(res => {
+        if(res.isConfirmed) {
+            gasAPI_POST({ action: 'deleteOpsiHarga', auth: currentUser, opsiId: id }).then(r => { loadMasterOpsi(); });
+        }
+    });
+}
 
 // ==========================================
 // KODE BARU: Logika Pop-up Google Play Store
